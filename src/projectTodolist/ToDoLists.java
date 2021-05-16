@@ -264,12 +264,19 @@ public class ToDoLists extends javax.swing.JFrame implements Serializable  {
     }//GEN-LAST:event_tableListMouseClicked
 
     private void SaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SaveActionPerformed
-        //ProjectToDoList.save(this.tableList);
-        Object[] content = new Object[2];
-        ArrayList<Object[]> arr = new ArrayList();
-        //for (int i = 0; i < this.lists.size(); i++){
-           // for (int j = 0; j < lists.get(i).)
-        //}
+        //
+        ArrayList<ArrayList<Object[]>> dataArray = new ArrayList();
+        ArrayList<String> names = new ArrayList();
+        for (int i = 0; i < this.lists.size(); i++){
+            dataArray.add(this.lists.get(i).getTableContent());
+            names.add(lists.get(i).toString());
+        }
+        if (ProjectToDoList.save(dataArray, "DataArray")){
+            JOptionPane.showMessageDialog(this, "Save successful!");
+        }
+        if (ProjectToDoList.save(names, "TableNames")){
+            JOptionPane.showMessageDialog(this, "Save successful!");
+        }
     }//GEN-LAST:event_SaveActionPerformed
 
     /**

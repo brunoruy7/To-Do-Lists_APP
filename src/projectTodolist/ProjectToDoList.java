@@ -54,18 +54,23 @@ public class ProjectToDoList {
     }
     
     
-    public static void save(JTable page){
+    public static boolean save(Object obj, String name){
+        boolean state = true;
         try{
-            FileOutputStream outFile = new FileOutputStream ("SavedList.dat");
+            FileOutputStream outFile = new FileOutputStream (name + ".save");
             ObjectOutputStream out = new ObjectOutputStream(outFile);
-            out.writeObject(page);
+            out.writeObject(obj);
             out.close();
             outFile.close();
             
-        JOptionPane.showMessageDialog(page, "Save successful!");
+        
             
         }catch(IOException e){
             System.err.println("Error: " + e);
+            state = false;
+        }
+        finally {
+            return state;
         }
     }
 }

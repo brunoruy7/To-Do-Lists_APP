@@ -5,6 +5,8 @@
  */
 package projectTodolist;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author BRUNO
@@ -240,17 +242,23 @@ public class List extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void backActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backActionPerformed
-        getTableContent();
+        //getTableContent();
         this.setVisible(false);
         ref.setVisible(true);
   
     
     }//GEN-LAST:event_backActionPerformed
-    public void getTableContent(){
-       // for (int j = 0; j < this.toDoTable.getRowCount(); j++){
-         //   if(toDoTable.getSelectedRows())
-       // }
-       System.out.println(toDoTable.getSelectedRows());
+    public ArrayList getTableContent(){
+        ArrayList<Object[]> data = new ArrayList();
+        Object[] temp = new Object[2]; 
+        for (int j = 0; j < this.toDoTable.getRowCount(); j++){
+            if(!(toDoTable.getModel().getValueAt(j, 1) == null)){
+                temp[0] = toDoTable.getModel().getValueAt(j, 0);
+                temp[1] = toDoTable.getModel().getValueAt(j, 1);
+                data.add(temp);
+            }
+        }
+        return data;
     }
     
     private void NameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_NameActionPerformed
