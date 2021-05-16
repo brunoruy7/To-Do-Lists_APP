@@ -1,6 +1,7 @@
 package projectTodolist;
 
 import java.io.*;
+import java.util.ArrayList;
 import javax.swing.*;
 
 /**
@@ -9,19 +10,37 @@ import javax.swing.*;
  */
 public class ProjectToDoList {
     public static void main(String args[]) {
-        JTable table;
+        ArrayList<ArrayList<Object[]>> tables = new ArrayList();
+        ArrayList<String> names = new ArrayList();
         ToDoLists page;
         
         try{
-            FileInputStream inFile = new FileInputStream ("SavedList.save");
-            ObjectInputStream in = new ObjectInputStream(inFile);
+            FileInputStream inFile1 = new FileInputStream ("dist//Saved_Files//DataArray.save");
+            ObjectInputStream in1 = new ObjectInputStream(inFile1);
             
-            table = (JTable)in.readObject();
-            page = new ToDoLists(table);
+            FileInputStream inFile2 = new FileInputStream ("dist//Saved_Files//TableNames.save");
+            ObjectInputStream in2 = new ObjectInputStream(inFile2);
             
+            tables = (ArrayList)in1.readObject();
+            names = (ArrayList)in2.readObject();
+            page = new ToDoLists();
             
-            in.close();
-            inFile.close();
+            for (int i = 0; i < tables.size(); i++){
+                page.tableList.setValueAt(names.get(i), i, 0);
+                page.lists.add(new List(i, page, names.get(i)));
+                page.c = tables.size();
+                page.lists.get(i).ref = page;
+                for (int j = 0; j < tables.get(i).size(); j++){
+                    
+                    page.lists.get(i).toDoTable.setValueAt((boolean)tables.get(i).get(j)[0], j, 0);
+                    page.lists.get(i).toDoTable.setValueAt((String)tables.get(i).get(j)[1], j, 1);
+                }
+            }
+            
+            in1.close();
+            inFile1.close();
+            in2.close();
+            inFile2.close();
             page.setVisible(true);
             
         }catch(IOException e){
@@ -36,28 +55,12 @@ public class ProjectToDoList {
         
                 
         
-    }
-    
-    public static void save(tryal page){
-        try{
-            FileOutputStream outFile = new FileOutputStream ("SavedList.dat");
-            ObjectOutputStream out = new ObjectOutputStream(outFile);
-            out.writeObject(page);
-            out.close();
-            outFile.close();
-            
-        JOptionPane.showMessageDialog(page, "Save successful!");
-            
-        }catch(IOException e){
-            System.err.println("Error: " + e);
-        }
-    }
-    
+    }    
     
     public static boolean save(Object obj, String name){
         boolean state = true;
         try{
-            FileOutputStream outFile = new FileOutputStream (name + ".save");
+            FileOutputStream outFile = new FileOutputStream ("Saved_Files//"+ name + ".save");
             ObjectOutputStream out = new ObjectOutputStream(outFile);
             out.writeObject(obj);
             out.close();

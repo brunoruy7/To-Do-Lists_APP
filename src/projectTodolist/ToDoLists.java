@@ -14,7 +14,7 @@ import javax.swing.*;
  * @author BRUNO
  */
 public class ToDoLists extends javax.swing.JFrame implements Serializable  {
-    ArrayList<List> lists = new ArrayList<List>();
+    public ArrayList<List> lists = new ArrayList<List>();
     ToDoLists test;
     String name;
     int c = 0;
@@ -45,6 +45,7 @@ public class ToDoLists extends javax.swing.JFrame implements Serializable  {
         jScrollPane1 = new javax.swing.JScrollPane();
         tableList = new javax.swing.JTable();
         Save = new javax.swing.JButton();
+        removeList = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -195,41 +196,52 @@ public class ToDoLists extends javax.swing.JFrame implements Serializable  {
             }
         });
 
-        jLabel1.setText("Welcome " + name);
-        jLabel1.setOpaque(true);
+        removeList.setText("Remove List");
+        removeList.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                removeListActionPerformed(evt);
+            }
+        });
+
+        jLabel1.setFont(new java.awt.Font("Vivaldi", 1, 24)); // NOI18N
+        jLabel1.setText("Came check your To-Do activities");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addGap(43, 43, 43)
-                .addComponent(Save)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(NewToDoList)
-                .addGap(73, 73, 73))
             .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(110, 110, 110)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(43, 43, 43)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(110, 110, 110)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(29, 29, 29)
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(126, Short.MAX_VALUE))
+                        .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 361, Short.MAX_VALUE)
+                        .addContainerGap())
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addComponent(Save)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(removeList)
+                            .addComponent(NewToDoList))
+                        .addGap(94, 94, 94))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 24, Short.MAX_VALUE)
-                .addGap(18, 18, 18)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(32, 32, 32)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(NewToDoList)
                     .addComponent(Save))
-                .addGap(65, 65, 65))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(removeList)
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -257,10 +269,11 @@ public class ToDoLists extends javax.swing.JFrame implements Serializable  {
     }//GEN-LAST:event_NewToDoListActionPerformed
 
     private void tableListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableListMouseClicked
-        //System.out.println(tableList.getSelectedRow());
-        try{
-        lists.get(tableList.getSelectedRow()).setVisible(true);
-        }catch(IndexOutOfBoundsException ex){}
+        if (evt.getClickCount() == 2 && tableList.getSelectedRow() != -1){
+            try{
+            lists.get(tableList.getSelectedRow()).setVisible(true);
+            }catch(IndexOutOfBoundsException ex){}
+        }
     }//GEN-LAST:event_tableListMouseClicked
 
     private void SaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SaveActionPerformed
@@ -271,13 +284,17 @@ public class ToDoLists extends javax.swing.JFrame implements Serializable  {
             dataArray.add(this.lists.get(i).getTableContent());
             names.add(lists.get(i).toString());
         }
-        if (ProjectToDoList.save(dataArray, "DataArray")){
+        if (ProjectToDoList.save(dataArray, "DataArray") && ProjectToDoList.save(names, "TableNames")){
             JOptionPane.showMessageDialog(this, "Save successful!");
         }
-        if (ProjectToDoList.save(names, "TableNames")){
-            JOptionPane.showMessageDialog(this, "Save successful!");
-        }
+        else{JOptionPane.showMessageDialog(this, "Save not successful!");}
     }//GEN-LAST:event_SaveActionPerformed
+
+    private void removeListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeListActionPerformed
+        lists.remove(this.tableList.getSelectedRow());
+        tableList.setValueAt(null, this.tableList.getSelectedRow(), 0);
+        c--;
+    }//GEN-LAST:event_removeListActionPerformed
 
     /**
      * @param args the command line arguments
@@ -320,6 +337,7 @@ public class ToDoLists extends javax.swing.JFrame implements Serializable  {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable tableList;
+    private javax.swing.JButton removeList;
+    public javax.swing.JTable tableList;
     // End of variables declaration//GEN-END:variables
 }

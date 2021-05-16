@@ -18,9 +18,10 @@ public class List extends javax.swing.JFrame {
      * Creates new form List
      * @param num
      */
-    public List(int num) {
+    public List(int num, ToDoLists reference, String c) {
         this.c = "New List " + String.valueOf(num);
-        //this.ref = reference;
+        this.ref = reference;
+        this.c = c;
         initComponents();
     }
     
@@ -50,6 +51,7 @@ public class List extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         toDoTable = new javax.swing.JTable();
+        removeLine = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -67,6 +69,11 @@ public class List extends javax.swing.JFrame {
         Name.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 NameActionPerformed(evt);
+            }
+        });
+        Name.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                NamePropertyChange(evt);
             }
         });
 
@@ -189,29 +196,38 @@ public class List extends javax.swing.JFrame {
                 return types [columnIndex];
             }
         });
+        toDoTable.setDragEnabled(true);
+        toDoTable.setMaximumSize(new java.awt.Dimension(2147483647, 2147483647));
         jScrollPane1.setViewportView(toDoTable);
         if (toDoTable.getColumnModel().getColumnCount() > 0) {
-            toDoTable.getColumnModel().getColumn(0).setPreferredWidth(20);
+            toDoTable.getColumnModel().getColumn(0).setPreferredWidth(5);
         }
+
+        removeLine.setText("Remove Line");
+        removeLine.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                removeLineActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGap(41, 41, 41)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(41, 41, 41)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(Name, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 328, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addComponent(back)))
-                .addContainerGap(74, Short.MAX_VALUE))
+                        .addComponent(back)
+                        .addGap(202, 202, 202)
+                        .addComponent(removeLine))
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 366, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(jPanel1Layout.createSequentialGroup()
+                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGap(61, 61, 61)
+                            .addComponent(Name, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(36, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -220,10 +236,12 @@ public class List extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(Name, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(35, 35, 35)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 210, Short.MAX_VALUE)
-                .addGap(29, 29, 29)
-                .addComponent(back)
+                .addGap(28, 28, 28)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 228, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(back)
+                    .addComponent(removeLine))
                 .addGap(32, 32, 32))
         );
 
@@ -252,10 +270,14 @@ public class List extends javax.swing.JFrame {
         ArrayList<Object[]> data = new ArrayList();
         Object[] temp = new Object[2]; 
         for (int j = 0; j < this.toDoTable.getRowCount(); j++){
-            if(!(toDoTable.getModel().getValueAt(j, 1) == null)){
+            if(!((String)toDoTable.getModel().getValueAt(j, 1) == null )){
                 temp[0] = toDoTable.getModel().getValueAt(j, 0);
                 temp[1] = toDoTable.getModel().getValueAt(j, 1);
-                data.add(temp);
+                if (temp[0] == null){
+                    temp[0] = false;
+                }
+                //Object[] temp1 = { toDoTable.getModel().getValueAt(j, 0), toDoTable.getModel().getValueAt(j, 1)};
+                data.add(temp.clone());
             }
         }
         return data;
@@ -264,6 +286,18 @@ public class List extends javax.swing.JFrame {
     private void NameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_NameActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_NameActionPerformed
+
+    private void NamePropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_NamePropertyChange
+        this.c = Name.getText();
+    }//GEN-LAST:event_NamePropertyChange
+
+    private void removeLineActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeLineActionPerformed
+        try{
+            toDoTable.setValueAt(null, this.toDoTable.getSelectedRow(), 0);
+            toDoTable.setValueAt(null, this.toDoTable.getSelectedRow(), 1);
+            
+        }catch (ArrayIndexOutOfBoundsException e){}
+    }//GEN-LAST:event_removeLineActionPerformed
 
     /**
      * @param args the command line arguments
@@ -306,6 +340,7 @@ public class List extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable toDoTable;
+    private javax.swing.JButton removeLine;
+    public javax.swing.JTable toDoTable;
     // End of variables declaration//GEN-END:variables
 }
