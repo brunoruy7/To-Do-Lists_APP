@@ -34,6 +34,8 @@ public class ProjectToDoList {
                     
                     page.lists.get(i).toDoTable.setValueAt((boolean)tables.get(i).get(j)[0], j, 0);
                     page.lists.get(i).toDoTable.setValueAt((String)tables.get(i).get(j)[1], j, 1);
+                    page.lists.get(i).toDoTable.setValueAt((String)tables.get(i).get(j)[2], j, 2);
+                    page.lists.get(i).toDoTable.setValueAt((String)tables.get(i).get(j)[3], j, 3);
                 }
             }
             
@@ -60,7 +62,7 @@ public class ProjectToDoList {
     public static boolean save(Object obj, String name){
         boolean state = true;
         try{
-            FileOutputStream outFile = new FileOutputStream ("Saved_Files//"+ name + ".save");
+            FileOutputStream outFile = new FileOutputStream ("dist//Saved_Files//"+ name + ".save");
             ObjectOutputStream out = new ObjectOutputStream(outFile);
             out.writeObject(obj);
             out.close();

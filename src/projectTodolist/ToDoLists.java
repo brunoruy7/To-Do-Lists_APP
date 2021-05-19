@@ -25,11 +25,6 @@ public class ToDoLists extends javax.swing.JFrame implements Serializable  {
         initComponents();
         this.test = this;
     }
-    public ToDoLists(JTable saved) { 
-        initComponents();
-        this.test = this;
-        this.tableList = saved;
-    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -294,6 +289,20 @@ public class ToDoLists extends javax.swing.JFrame implements Serializable  {
         lists.remove(this.tableList.getSelectedRow());
         tableList.setValueAt(null, this.tableList.getSelectedRow(), 0);
         c--;
+        while (true){
+            boolean changed = false;
+            for (int i = this.tableList.getSelectedRow(); i < tableList.getRowCount() -1; i++){
+                
+                if(tableList.getValueAt(i + 1, 0) != null && tableList.getValueAt(i, 0) == null){
+                    tableList.setValueAt(lists.get(i), i, 0);
+                    tableList.setValueAt(null, i+1, 0);
+                    changed = true;
+                }
+            }
+            if (changed){
+                break;
+            }
+        }
     }//GEN-LAST:event_removeListActionPerformed
 
     /**
